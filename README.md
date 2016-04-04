@@ -11,7 +11,7 @@ problem.
 So, I've rewritten everything. There may be a line or two which has
 escaped, and the filenames are probably the same but it's pretty
 much a complete rewrite. Smaller, cleaner, better documented, and
-more functional. Thanks to Philip for the original starting point.
+more functional. Thanks to Philip for square one.
 
 ## Usage
 
@@ -21,16 +21,16 @@ Copy/clone/link/whatever this directory somewhere in your module
 path. I use a masterless Puppet setup, and haven't tested it with a
 Puppet master.
 
-### Types
+### Attributes
 
-The name of the resource is not important. It doesn't really make
-sense to have any of the following fields as the named parameter.
-Just make it something meaningful.
+The name of the resource is not important. It doesn't make sense to
+have any of the following fields as the named parameter.  Just make
+it something meaningful.
 
 * **`fmri`**: an FMRI which uniquely identifies the service whose
   properties you wish to manage. Follows the same pattern as the
-  `svc*` commands, so you can provide something as longs as
-  'svc:/application/database/mysql:version_56' or as short as
+  `svc*` commands, so you can provide something as long as
+  `svc:/application/database/mysql:version_56` or as short as
   `mysql`, depending on your SMF schema. Bear in mind that some
   properties belong to the service, and some belong to the instance
   of the service. (This is a bit of SMF complexity which catches a
@@ -66,7 +66,22 @@ This example configures DNS on Solaris 11 using data from Hiera. The
 module will take care of correctly quoting and bracketing everything
 if there are more than one `dns_servers`.
 
+```yaml
+---
+
+# the Hiera
+
+basenode::dns_domain: localnet
+
+basenode::dns_servers:
+  - 8.8.8.8
+  - 8.8.4.4
+```
+
 ```puppet
+
+# the Puppet
+
 svcprop { 'dns-nameservers':
   fmri     => 'dns/client',
   property => 'config/nameserver',
@@ -90,10 +105,13 @@ svcprop { 'dns-domain':
 ## Bugs and Stuff
 
 There's no `metadata.json`, `Modulefile` or whatever. I'm [not much
-of a believer in the
-Forge](http://sysdef.xyz/post/2015-11-16-do-it-yourself).
+of a believer in the Forge]
+(http://sysdef.xyz/post/2015-11-16-do-it-yourself).
 
-If you use this and you find you have problems, please raise an
+SMF is a (over?) complicated system, and there may be use-cases
+which this module does not cover.
+
+If you use the code and you find you have problems, please raise an
 issue on Github, or better still, fix it and send me a PR.
 
 ## License
